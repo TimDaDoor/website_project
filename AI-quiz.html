@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test your knowledge about AI with this interactive quiz">
+    <title>AI Quiz | Door Presents</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="page1.html">About AI</a></li>
+                <li><a href="page2.html">AI Applications</a></li>
+                <li><a href="page3.html">Research</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="content-box">
+            <h1>AI Knowledge Quiz</h1>
+            <p>Test how much you know about artificial intelligence!</p>
+            <a href="index.html" class="cta-button">Back to Home</a>
+        </div>
+    </section>
+
+    <section class="content">
+        <form id="quiz-form">
+            <div class="content-box question">
+                <h2>1. What is the most popular programming language used for AI development?</h2>
+                <label><input type="radio" name="q1" value="Python"> Python</label><br>
+                <label><input type="radio" name="q1" value="JavaScript"> JavaScript</label><br>
+                <label><input type="radio" name="q1" value="Java"> Java</label>
+            </div>
+
+            <div class="content-box question">
+                <h2>2. What does "GPT" stand for in GPT-3?</h2>
+                <label><input type="radio" name="q2" value="Generative Pretrained Transformer"> Generative Pretrained Transformer</label><br>
+                <label><input type="radio" name="q2" value="Generalized Performance Tuner"> Generalized Performance Tuner</label><br>
+                <label><input type="radio" name="q2" value="Generative Pre-training Technology"> Generative Pre-training Technology</label>
+            </div>
+
+            <div class="content-box question">
+                <h2>3. Which company created GPT-3?</h2>
+                <label><input type="radio" name="q3" value="OpenAI"> OpenAI</label><br>
+                <label><input type="radio" name="q3" value="Google"> Google</label><br>
+                <label><input type="radio" name="q3" value="Microsoft"> Microsoft</label>
+            </div>
+
+            <div class="content-box question">
+                <h2>4. What is machine learning?</h2>
+                <label><input type="radio" name="q4" value="A branch of AI focused on data analysis and pattern recognition"> A branch of AI focused on data analysis and pattern recognition</label><br>
+                <label><input type="radio" name="q4" value="A hardware optimization technique"> A hardware optimization technique</label><br>
+                <label><input type="radio" name="q4" value="A method of human programming"> A method of human programming</label>
+            </div>
+
+            <div class="content-box question">
+                <h2>5. What are some common AI applications in healthcare?</h2>
+                <textarea name="q5" rows="3" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="content-box question">
+                <h2>6. Explain how AI can improve education.</h2>
+                <textarea name="q6" rows="3" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="content-box">
+                <button type="button" onclick="checkQuiz()">Submit Quiz</button>
+            </div>
+        </form>
+
+        <div id="quiz-result" class="content-box hidden">
+            <h2>Quiz Results</h2>
+            <p id="score"></p>
+            <a href="index.html" class="cta-button">Back to Home</a>
+        </div>
+    </section>
+
+    <footer>2024 Door Presents</footer>
+
+    <script>
+        function checkQuiz() {
+            const answers = {
+                q1: "Python",
+                q2: "Generative Pretrained Transformer",
+                q3: "OpenAI",
+                q4: "A branch of AI focused on data analysis and pattern recognition"
+            };
+
+            // Keywords for free-response grading
+            const keywordSets = {
+                q5: {
+                    keywords: ["diagnosis", "patient", "imaging", "records", "AI tools"],
+                    pointsPerKeyword: 0.5
+                },
+                q6: {
+                    keywords: ["personalized", "adaptive", "learning", "tools", "engagement", "student"],
+                    pointsPerKeyword: 0.5
+                }
+            };
+
+            let score = 0;
+            const totalQuestions = 6;
+            const form = document.getElementById("quiz-form");
+            const result = document.getElementById("quiz-result");
+            const scoreText = document.getElementById("score");
+
+            // Check multiple-choice questions
+            for (let question in answers) {
+                const selected = form.querySelector(`input[name="${question}"]:checked`);
+                if (selected && selected.value === answers[question]) {
+                    score++;
+                }
+            }
+
+            // Check free-response questions
+            for (let question in keywordSets) {
+                const response = form.querySelector(`textarea[name="${question}"]`).value.toLowerCase();
+                const keywordSet = keywordSets[question];
+                let points = 0;
+
+                // Check each keyword in the response
+                keywordSet.keywords.forEach(keyword => {
+                    if (response.includes(keyword)) {
+                        points += keywordSet.pointsPerKeyword;
+                    }
+                });
+
+                // Add the points to the total score
+                score += Math.min(points, 1); // Cap at 1 point per question
+            }
+
+            // Display the result
+            scoreText.textContent = `You got ${score} out of ${totalQuestions} questions correct!`;
+            result.classList.remove("hidden");
+            form.classList.add("hidden");
+        }
+    </script>
+</body>
+</html>

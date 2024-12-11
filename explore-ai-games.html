@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Challenge yourself in a 5x5 Tic-Tac-Toe game with random AI personalities!">
+    <title>5x5 Tic-Tac-Toe | AI Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 80px);
+            grid-gap: 5px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 2px solid #ccc;
+            cursor: pointer;
+        }
+
+        .cell:hover {
+            background-color: #e0e0e0;
+        }
+
+        .cell.taken {
+            pointer-events: none;
+            background-color: #d0d0d0;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .reset-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="page1.html">About AI</a></li>
+                <li><a href="page2.html">AI Applications</a></li>
+                <li><a href="page3.html">Research</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="content-box">
+            <h1>AI Games</h1>
+            <p>This game has combined AI with tic-tac-toe.</p>
+            <a href="index.html" class="cta-button">Back to Home</a>
+        </div>
+    </section>
+
+    <section class="game">
+        <div class="board" id="board"></div>
+        <div class="message" id="message">Your Turn: X</div>
+        <button class="reset-button" onclick="resetGame()">Restart Game</button>
+    </section>
+    <footer>2024 Door Presents</footer>
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        const playerSymbol = 'X';
+        const aiSymbol = 'O';
+        let cells = Array(25).fill('');
+        let gameActive = true;
+        let aiPersonality;
+
+        const personalities = ['Aggressive', 'Defensive', 'Balanced', 'Tricky', 'Risk-Taking'];
+        const winningCombinations = getWinningCombinations(5);
+
+        function initializeBoard() {
+            board.innerHTML = '';
+            cells = Array(25).fill('');
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.addEventListener('click', () => makeMove(cell, i));
+                board.appendChild(cell);
+            }
+            aiPersonality = personalities[Math.floor(Math.random() * personalities.length)];
+            message.textContent = `AI Personality: ${aiPersonality} | Your Turn: X`;
+            gameActive = true;
+        }
+
+        function makeMove(cell, index) {
+            if (!gameActive || cells[index]) return;
+
+            cells[index] = playerSymbol;
+            cell.textContent = playerSymbol;
+            cell.classList.add('taken');
+
+            if (checkWin(playerSymbol)) {
+                message.textContent = 'You Win! 🎉';
+                gameActive = false;
+                return;
+            }
+
+            if (cells.every(cell => cell)) {
+                message.textContent = 'It\'s a Draw! 😐';
+                gameActive = false;
+                return;
+            }
+
+            message.textContent = `AI (${aiPersonality}) is thinking...`;
+            setTimeout(aiMove, 500);
+        }
+
+        function aiMove() {
+            if (!gameActive) return;
+
+            const move = chooseMove();
+            cells[move] = aiSymbol;
+            const cell = board.children[move];
+            cell.textContent = aiSymbol;
+            cell.classList.add('taken');
+
+            if (checkWin(aiSymbol)) {
+                message.textContent = `AI (${aiPersonality}) Wins! 🤖`;
+                gameActive = false;
+                return;
+            }
+
+            if (cells.every(cell => cell)) {
+                message.textContent = 'It\'s a Draw! 😐';
+                gameActive = false;
+                return;
+            }
+
+            message.textContent = `AI Personality: ${aiPersonality} | Your Turn: X`;
+        }
+
+        function chooseMove() {
+            switch (aiPersonality) {
+                case 'Aggressive':
+                    return findWinningMove(aiSymbol) || randomMove();
+                case 'Defensive':
+                    return findWinningMove(aiSymbol) || blockPlayerMove() || randomMove();
+                case 'Balanced':
+                    return findWinningMove(aiSymbol) || blockPlayerMove() || strategicMove();
+                case 'Tricky':
+                    return cornerMove() || randomMove();
+                case 'Risk-Taking':
+                    return randomMove();
+            }
+        }
+
+        function findWinningMove(symbol) {
+            for (const combination of winningCombinations) {
+                const values = combination.map(index => cells[index]);
+                if (values.filter(val => val === symbol).length === 4 && values.includes('')) {
+                    return combination[values.indexOf('')];
+                }
+            }
+            return null;
+        }
+
+        function blockPlayerMove() {
+            return findWinningMove(playerSymbol);
+        }
+
+        function randomMove() {
+            const available = cells.map((val, index) => (val === '' ? index : null)).filter(index => index !== null);
+            return available[Math.floor(Math.random() * available.length)];
+        }
+
+        function cornerMove() {
+            const corners = [0, 4, 20, 24];
+            return corners.find(index => cells[index] === '') || null;
+        }
+
+        function strategicMove() {
+            return cells.indexOf('');
+        }
+
+        function checkWin(symbol) {
+            return winningCombinations.some(combination =>
+                combination.every(index => cells[index] === symbol)
+            );
+        }
+
+        function resetGame() {
+            initializeBoard();
+        }
+
+        function getWinningCombinations(size) {
+            const combinations = [];
+
+            // Rows
+            for (let i = 0; i < size; i++) {
+                combinations.push([...Array(size).keys()].map(x => x + i * size));
+            }
+
+            // Columns
+            for (let i = 0; i < size; i++) {
+                combinations.push([...Array(size).keys()].map(x => x * size + i));
+            }
+
+            // Diagonals
+            combinations.push([...Array(size).keys()].map(x => x * (size + 1)));
+            combinations.push([...Array(size).keys()].map(x => (x + 1) * (size - 1)));
+
+            return combinations;
+        }
+
+        initializeBoard();
+    </script>
+</body>
+</html>

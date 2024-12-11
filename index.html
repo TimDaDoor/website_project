@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exploring the endless possibilities of AI">
+    <title>AI Showcase | Door Presents</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="page1.html">About AI</a></li>
+                <li><a href="page2.html">AI Applications</a></li>
+                <li><a href="page3.html">Research</a></li>
+            </ul>
+        </nav>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search for keywords..." oninput="showSuggestions()">
+            <button onclick="searchKeyword()">Search</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="content-box">
+            <h1>Exploring the Future of Artificial Intelligence</h1>
+            <p>Unlocking new possibilities in every field—from healthcare to creativity. AI is transforming industries and shaping our future.</p>
+            <a href="news.html" class="cta-button">Dive into the Newest AI News</a>
+            <a href="explore-ai-games.html" class="cta-button">Explore AI Games</a>
+        </div>
+    </section>
+    
+    <section id="explore">
+        <div class="content-box">
+            <h2>Latest Trends</h2>
+            <p>Stay updated with cutting-edge innovations and the newest AI technologies making headlines.</p>
+        </div>
+
+        <div class="content-box">
+            <h2>AI in Everyday Life</h2>
+            <p>From virtual assistants to recommendation systems, AI plays an integral role in simplifying our daily activities and enhancing convenience.</p>
+        </div>
+
+        <div class="content-box">
+            <h2>AI in Business</h2>
+            <p>Businesses are leveraging AI for data-driven decisions, automation, and improved customer experiences. Discover its impact on global industries.</p>
+        </div>
+
+        <div class="content-box">
+            <h2>AI and Ethics</h2>
+            <p>As AI becomes more pervasive, ethical considerations around privacy, bias, and accountability are gaining importance.</p>
+        </div>
+
+        <div class="content-box">
+            <h2>The Future of Work</h2>
+            <p>AI is reshaping the job market by automating routine tasks and creating new opportunities in technology-driven fields.</p>
+        </div>
+
+        <div class="content-box">
+            <h2>AI in Space Exploration</h2>
+            <p>AI is pushing the boundaries of space exploration, from autonomous rovers on Mars to data analysis for understanding the cosmos.</p>
+        </div>
+
+        <!-- Explore More AI Button -->
+        <div class="content-box">
+            <p>Want to dive deeper into the world of AI? Click below to explore more!</p>
+            <button class="cta-button" onclick="exploreMoreAI()">Explore More AI</button>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 Door Presents. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function exploreMoreAI() {
+            // Randomly pick a page from 1.html, 2.html, 3.html, or 4.html
+            var pages = ['AI-benifits.html', 'AI-quiz.html'];
+            var randomPage = pages[Math.floor(Math.random() * pages.length)];
+            window.location.href = randomPage;
+        }
+
+        function showSuggestions() {
+            var input = document.getElementById("search-bar").value;
+            var suggestionsBox = document.getElementById("suggestions-box");
+            if (input.length > 0) {
+                suggestionsBox.style.display = "block";
+                // Example static suggestions for demonstration
+                suggestionsBox.innerHTML = `
+                    <div class="suggestion">AI Research</div>
+                    <div class="suggestion">AI Applications</div>
+                    <div class="suggestion">Ethical AI</div>
+                `;
+            } else {
+                suggestionsBox.style.display = "none";
+            }
+        }
+
+        function searchKeyword() {
+            var query = document.getElementById("search-bar").value;
+            if (query) {
+                // Logic to handle the search could go here
+                alert("Searching for: " + query);
+            }
+        }
+    </script>
+
+</body>
+</html>
